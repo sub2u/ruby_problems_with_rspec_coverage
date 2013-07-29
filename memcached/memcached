@@ -25,11 +25,11 @@ class Memcached
         catched_obj = CachedMemory.new
 
         if formated_request[0] == "set"
-          responce = catched_obj.send(formated_request[0], memory, formated_request[1].to_sym, formated_request[2])
+          responce = catched_obj.send(formated_request[0], memory, log, formated_request[1].to_sym, formated_request[2])
         elsif formated_request[2].nil?
-          responce = catched_obj.send(formated_request[0], formated_request[1].to_sym)
+          responce = catched_obj.send(formated_request[0], log, formated_request[1].to_sym)
         else
-          responce = catched_obj.send(formated_request)
+          responce = catched_obj.send(formated_request, log)
         end
 
         ## Lets respond with a nice warm welcome message
