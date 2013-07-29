@@ -1,0 +1,3 @@
+class MemcachClient
+
+end

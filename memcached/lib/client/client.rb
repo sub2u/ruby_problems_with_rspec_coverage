@@ -3,7 +3,7 @@ require 'socket'
 # establish connection
 ## We need to tell the client where to connect
 ## Conveniently it is on localhost at port 2008!
-clientSession = TCPSocket.new( "localhost", 2009 )
+clientSession = TCPSocket.new( "localhost", 4455 )
 puts "log: starting connection"
 #send a quick message
 ## Note that this has a carriage return. Remember our server

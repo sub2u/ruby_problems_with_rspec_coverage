@@ -1,22 +1,18 @@
 #!/usr/bin/env ruby
-
-class Mymap
-$mcatch = {}
-  def set(key, value)
-  $mcatch[key] = value
-   end
-  def get(key)
-  $mcatch[key]
-   end
-  def flush
-  $mcatch = {}
-   end
-end
 require 'socket'
-puts "Starting up server..."
-# establish the server
-## Server established to listen for connections on port 2008
-server = TCPServer.new(2009)
+user_control = {}
+ARGV.each_with_index do|a, i|
+  if a.size == 2 && a[0] == '-'
+    user_control[a[1].to_sym] = ARGV[i+1]
+  elsif a[0] == '-'
+    user_control[a[1].to_sym] = a[2..-1]
+  end
+end
+MEMORY = user_control[:m]
+LOG = user_control[:v]
+user_control[:p] ||= 2000 
+server = TCPServer.new(user_control[:p])
+puts "Starting up server on port #{user_control[:p]}"
 # setup to listen and accept connections
 while (session = server.accept)
  #start new thread conversation
@@ -32,7 +28,7 @@ while (session = server.accept)
    ## for an end of line character "\n" before moving forward.
    input = session.gets.chomp
    puts input.inspect
-p test_var << Mymap.new.send(['set','hi',30])
+p test_var << Mymap.new.send('set','hi',30)
    ## Lets respond with a nice warm welcome message
    session.puts test_var
    # reply with goodbye
