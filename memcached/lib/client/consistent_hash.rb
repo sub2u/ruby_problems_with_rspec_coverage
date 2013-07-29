@@ -35,5 +35,9 @@ module ConsistentHashr
     return @circle_clock.first.last if hash.nil?
     return @circle_clock[hash]
   end
+
+  def self.all_servers
+    @circle_clock.invert.map{|k,v| k}
+  end
   
 end

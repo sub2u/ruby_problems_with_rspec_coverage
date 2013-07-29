@@ -26,8 +26,12 @@ class MemcachClient
   end
 
   def flush
-    mm_client = processconsisten_hash
+    mem_server = ConsistentHashr.all_servers
+    mem_server.each do |server|
+    mm_client = TcpClient.new(server)
     mm_client.process_connection('flush')
+    end
+
   end
 
 private 

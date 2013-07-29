@@ -1,6 +1,61 @@
 #!/usr/bin/env ruby
 require File.dirname(__FILE__) + "/lib/server/memory_allocation"
 require 'socket'
+
+class Memcached
+  attr_reader :memory, :log, :port
+  def initialize(user_control)
+    @memory = user_control[:m].to_i
+    @log = user_control[:v]
+    @port = user_control[:p] ||= 2000
+  end
+  def start_server
+    server = TCPServer.new(port)
+    puts "Starting up server on port #{port}"
+# setup to listen and accept connections
+while (session = server.accept)
+
+ Thread.start do
+
+   request = session.gets.chomp
+   formated_request = process_request(request)
+   catched_obj = CachedMemory.new
+
+   if formated_request[0] == "set"
+    responce = catched_obj.send(formated_request[0], memory, formated_request[1], formated_request[2])
+  elsif formated_request[2].nil?
+    responce = catched_obj.send(formated_request[0], formated_request[1])
+  else
+    responce = catched_obj.send(formated_request)
+  end
+
+   ## Lets respond with a nice warm welcome message
+   session.puts responce
+
+   session.puts "Server: Goodbye\n"
+ end  #end thread conversation
+
+end   #end loop
+end
+private
+
+def process_request(request)
+
+  method_hash = Hash[request.split(",").collect{|x| x.strip.split("=>")}]
+
+  case method_hash['method']
+  when 'get'
+    return 'get', method_hash['key']
+  when 'set'
+    return 'set', method_hash['key'], method_hash['value']
+  when 'flush'
+    return 'flush'
+  else
+    return 'other'
+  end
+end
+end
+
 user_control = {}
 ARGV.each_with_index do|a, i|
   if a.size == 2 && a[0] == '-'
@@ -9,51 +64,5 @@ ARGV.each_with_index do|a, i|
     user_control[a[1].to_sym] = a[2..-1]
   end
 end
-MEMORY = user_control[:m]
-LOG = user_control[:v]
-user_control[:p] ||= 2000
-
-server = TCPServer.new(user_control[:p])
-puts "Starting up server on port #{user_control[:p]}"
-# setup to listen and accept connections
-while (session = server.accept)
-
- Thread.start do
-
-   request = session.gets.chomp
-
-formated_request = process_request(request)
-catched_obj = CachedMemory.new
-if formated_request[1].nil? && formated_request[2].nil?
-  responce = catched_obj.send(formated_request[0])
-elsif formated_request[2].nil?
-  responce = catched_obj.send(formated_request[0], formated_request[1])
-else
-  responce = catched_obj.send(formated_request[0], formated_request[1], formated_request[2])
-end
-
-   ## Lets respond with a nice warm welcome message
-   session.puts responce
-
-   session.puts "Server: Goodbye\n"
- end  #end thread conversation
-
- private
-
- def process_request(request)
-
-    method_hash = Hash[request.split(",").collect{|x| x.strip.split("=>")}]
-
-    case method_hash['method']
-    when 'get'
-      return 'get', method_hash['key']
-    when 'set'
-      return 'set', method_hash['key'], method_hash['value']
-    when 'flush'
-      return 'flush'
-    else
-      return 'other'
-    end
- end
-
-end   #end loop
+mc_server = Memcached.new(user_control)
+mc_server.start_server

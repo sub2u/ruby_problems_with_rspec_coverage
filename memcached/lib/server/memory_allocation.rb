@@ -1,14 +1,24 @@
+require "objspace"
 class CachedMemory
 $mcatch = {}
 
-  def set(key, value)
-  	$mcatch[key] = value
-  	nil
+  def set(max_size, key, value)
+  begin
+    bite_size = ObjectSpace.memsize_of($mcatch)
+    if bite_size < max_size
+      $mcatch[key.to_sym] = value
+    else
+      puts "Memory limit reached."
+    end
+  rescue Exception => e
+    puts e
+    puts "Raised above error please fix above"
+  end
+  	
   end
 
   def get(key)
-  	p $mcatch
-  	$mcatch[key]
+  	$mcatch[key.to_sym]
   end
 
   def flush
