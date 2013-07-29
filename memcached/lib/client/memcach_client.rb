@@ -16,6 +16,19 @@ class MemcachClient
     puts "Added #{location} memcached server to list.."
   end
 
+  def self.remove_server(location)
+    ConsistentHash.remove_server location
+    puts "Rmoved #{location} memcached server from list.."
+  end
+
+  def self.all_servers
+    ConsistentHash.all_servers.join(', ')
+  end
+
+  def self.all_servers_with_dots
+    ConsistentHash.all_servers_with_dots
+  end
+
   def get(key)
     mm_client = processconsisten_hash(key)
     mm_client.process_connection('get', key)

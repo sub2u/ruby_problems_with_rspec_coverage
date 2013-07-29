@@ -10,8 +10,11 @@ class TcpClient
   end
 
   def process_connection(_method, _key = nil, _value = nil)
+
     clientSession = TCPSocket.new( host, port )
+
     clientSession.puts "method=>#{_method}, key=>#{_key}, value=>#{_value}"
+    
       while !(clientSession.closed?) && (serverMessage = clientSession.gets)
         clientSession.close if serverMessage.include?("Goodbye") # Close clientSession if receved Goodbye from server
         ## lets output our server messages
