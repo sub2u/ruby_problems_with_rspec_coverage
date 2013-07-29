@@ -17,12 +17,12 @@ class MemcachClient
 
   def get(key)
     mm_client = processconsisten_hash(key)
-    mm_client.process_connection('set', key)
+    mm_client.process_connection('get', key)
   end
 
   def set(key, value)
     mm_client = processconsisten_hash(key)
-    mm_client.process_connection('set', key, "#{value.inspect}")
+    mm_client.process_connection('set', key, "#{value}")
   end
 
   def flush

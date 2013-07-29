@@ -22,18 +22,19 @@ while (session = server.accept)
 
    request = session.gets.chomp
 
-p formated_request = process_request(request)
-begin
-p test_var = CachedMemory.new.send(formated_request[0], formated_request[1], formated_request[2])
-rescue Exception => e
-  puts e.inspect
-  end
+formated_request = process_request(request)
+catched_obj = CachedMemory.new
+if formated_request[1].nil? && formated_request[2].nil?
+  responce = catched_obj.send(formated_request[0])
+elsif formated_request[2].nil?
+  responce = catched_obj.send(formated_request[0], formated_request[1])
+else
+  responce = catched_obj.send(formated_request[0], formated_request[1], formated_request[2])
+end
+
    ## Lets respond with a nice warm welcome message
-   session.puts test_var
-   # reply with goodbye
-   ## now lets end the session since all we wanted to do is
-   ## acknowledge the client
-   puts "log: sending goodbye"
+   session.puts responce
+
    session.puts "Server: Goodbye\n"
  end  #end thread conversation
 
