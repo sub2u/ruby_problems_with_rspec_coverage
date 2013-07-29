@@ -1,17 +1,18 @@
 require File.dirname(__FILE__) + "/consistent_hash"
 require File.dirname(__FILE__) + "/client"
+
 class MemcachClient
 
   def initialize(mem_servers = {})
     p mem_servers
     mem_servers.each do |node, location|
-      ConsistentHashr.add_server(node, location)
+      ConsistentHash.add_server(node, location)
       puts "Added #{location} memcached server to list.."
     end
   end
 
   def self.add_server(node, location)
-    ConsistentHashr.add_server(node, location)
+    ConsistentHash.add_server(node, location)
     puts "Added #{location} memcached server to list.."
   end
 
@@ -26,10 +27,10 @@ class MemcachClient
   end
 
   def flush
-    mem_server = ConsistentHashr.all_servers
+    mem_server = ConsistentHash.all_servers
     mem_server.each do |server|
-    mm_client = TcpClient.new(server)
-    mm_client.process_connection('flush')
+      mm_client = TcpClient.new(server)
+      mm_client.process_connection('flush')
     end
 
   end
@@ -37,7 +38,7 @@ class MemcachClient
 private 
 
   def processconsisten_hash(key = nil)
-    mem_server = ConsistentHashr.get(key)
+    mem_server = ConsistentHash.get(key)
     mm_client = TcpClient.new(mem_server)
   end
 
