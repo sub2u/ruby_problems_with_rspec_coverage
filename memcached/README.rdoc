@@ -1,0 +1,38 @@
+I am sure you have heard about [memcached](http://memcached.org/). It is a classic key value store. Maintaining a O(1) execution time for most operations.
+
+What We'd like you to implement is memcached in ruby(or the language of your choice)
+
+I normally start memcached this
+`memcached -m 1280 -vv` (Actually I use -t 6, but ignore it for now)
+
+Where -m is the amount of memory to allocate
+and -vv is the verbosity of the logs.
+
+Your program should take the memory to allocate and the log level
+The basic implementation requires the following.
+* Following commands need to be implemented
+  * Set
+  * Get
+  * Flush
+* All the above operations should be O(1)
+* It should only use specified amount of memory.
+
+*There is one optional requirement*. 
+
+The following are the 3 big ideas from memcached in order.
+* Consistent hashing
+* Slab Based memory allocation
+* LRU algorithm for eviction.
+
+We'd also like you to implement *any one* of the above from the list. 
+Obviously some items are harder and some easier, We'd definitely give higher credit to a bad consistent hashing implementation than a good LRU eviction algorithm.
+
+What we are not looking for is an awesome scalable system.  We are looking for something that works given the above constraints without being pedantic about it.
+* Keep it small and simple.
+* Clever is good.
+* Tests are not necessary.
+* You don't have to drop down to malloc's to maintain exactly memory usage numbers
+* There are a lot things intentionally left unspecified above, use your judgement in making those decisions and ask questions if unsure.
+ 
+
+Here is a great introduction to [memcached internals](http://www.adayinthelifeof.nl/2011/02/06/memcache-internals/).
