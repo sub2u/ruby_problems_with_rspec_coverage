@@ -5,8 +5,7 @@ class TcpClient
   attr_reader :host, :port
 
   def initialize(_host)
-    @host = _host.split(':')[0]
-    @port = _host.split(':')[1]
+    @host, @port = _host.split(':')
   end
 
   def process_connection(_method, _key = nil, _value = nil)

@@ -7,7 +7,7 @@ class Memcached
   attr_reader :memory, :log, :port
 
   def initialize(user_control)
-    @memory = user_control[:m].to_i
+    @memory = user_control.has_key?(:m) ? user_control[:m].to_i : -1
     @log = user_control[:v]
     @port = user_control[:p] ||= 2000
   end
