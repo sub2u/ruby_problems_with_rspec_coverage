@@ -14,8 +14,7 @@ class CachedMemory
         puts "Memory limit reached."
       end
     rescue Exception => e
-      puts e
-      puts "Raised above error please fix to continue..."
+      puts "Raised The error '#{e.inspect}'please fix to continue..."
     end
   end
 

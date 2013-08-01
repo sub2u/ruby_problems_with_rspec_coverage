@@ -50,7 +50,7 @@ class MemcachClient
 
 private 
 
-  def processconsisten_hash(key = nil)
+  def processconsisten_hash(key)
     mem_server = ConsistentHash.get(key)
     mm_client = TcpClient.new(mem_server)
   end
